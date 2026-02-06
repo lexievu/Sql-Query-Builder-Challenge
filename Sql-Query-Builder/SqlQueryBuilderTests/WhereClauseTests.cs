@@ -12,6 +12,15 @@ public class WhereClausesTests
         var actual = where.ToString();
         Assert.Equal(expected, actual);
     }
+    
+    [Fact]
+    public void DateTimeWhereClause()
+    {
+        var where = new SqlWhere(new SqlColumn("Event", "Date"), Operator.GreaterThan, new DateTime(2026, 1, 1));
+        var expected = "Event.Date > '2026-01-01 00:00:00.000'";
+        var actual = where.ToString();
+        Assert.Equal(expected, actual);
+    }
 
     [Fact]
     public void AndWhereClause()
