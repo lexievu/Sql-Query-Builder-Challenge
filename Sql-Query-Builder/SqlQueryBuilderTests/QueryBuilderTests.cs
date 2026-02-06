@@ -35,6 +35,36 @@ public class QueryBuilderTests
         
         Assert.Equal(expected, queryBuilder);
     }
+
+    [Fact]
+    public void JoinWithOneTable()
+    {
+        var queryBuilder = new QueryBuilder()
+            .From("Event")
+            .Select([new SqlColumn("Event", "Id", "I"), new SqlColumn("Event", "Name", "N")])
+            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), "INNER")
+            .Build();
+        
+        var expected = "SELECT Event.Id AS I, Event.Name AS N FROM Event INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId";
+        
+        Assert.Equal(expected, queryBuilder);
+    }
+    
+    [Fact]
+    public void JoinWithTwoTables()
+    {
+        var queryBuilder = new QueryBuilder()
+            .From("Event")
+            .Select([new SqlColumn("Event", "Id", "I"), new SqlColumn("Event", "Name", "N")])
+            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
+            .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter)
+            .Build();
+        
+        var expected = "SELECT Event.Id AS I, Event.Name AS N FROM Event INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId" +
+                       " LEFT OUTER JOIN Attendee ON EventAttendee.AttendeeId = Attendee.Id";
+        
+        Assert.Equal(expected, queryBuilder);
+    }
     
     [Fact]
     public void Ultimate()
