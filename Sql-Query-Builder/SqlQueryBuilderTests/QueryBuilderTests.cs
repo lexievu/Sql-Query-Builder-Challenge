@@ -111,7 +111,7 @@ public class QueryBuilderTests
                        "FROM Event " +
                        "INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId " +
                        "LEFT OUTER JOIN Attendee ON EventAttendee.AttendeeId = Attendee.Id " +
-                       "WHERE (Attendee.Name = \"Bob\" OR Event.Important >= 1)";
+                       "WHERE (Attendee.Name = 'Bob' OR Event.Important >= 1)";
         
         Assert.Equal(expected, query);
     }

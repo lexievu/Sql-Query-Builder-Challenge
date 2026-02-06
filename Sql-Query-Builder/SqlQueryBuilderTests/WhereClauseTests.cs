@@ -29,7 +29,7 @@ public class WhereClausesTests
         var where2 = new SqlWhere(new SqlColumn("Event", "Name"), Operator.NotEquals, "TestName");
         var and = new And([where1, where2]);
         
-        var expected = "(Event.Id = 2 AND Event.Name != \"TestName\")";
+        var expected = "(Event.Id = 2 AND Event.Name != 'TestName')";
         var actual = and.ToString();
         Assert.Equal(expected, actual);
     }
@@ -41,7 +41,7 @@ public class WhereClausesTests
         var where2 = new SqlWhere(new SqlColumn("Event", "Name"), Operator.NotEquals, "TestName");
         var or = new Or([where1, where2]);
         
-        var expected = "(Event.Id = 2 OR Event.Name != \"TestName\")";
+        var expected = "(Event.Id = 2 OR Event.Name != 'TestName')";
         var actual = or.ToString();
         Assert.Equal(expected, actual);
     }
@@ -57,8 +57,8 @@ public class WhereClausesTests
         var where5 = new SqlWhere(new SqlColumn("Event", "B"), Operator.LessThan, 0);
         var and = new And([or, where3, new And([where4, where5])]);
         
-        var expected = "((Event.Id = 2 OR Event.Name != \"TestName\") " +
-                       "AND Event.CreatedBy != \"PersonA\" " +
+        var expected = "((Event.Id = 2 OR Event.Name != 'TestName') " +
+                       "AND Event.CreatedBy != 'PersonA' " +
                        "AND (Event.A > 23 AND Event.B < 0))";
         var actual = and.ToString();
         Assert.Equal(expected, actual);

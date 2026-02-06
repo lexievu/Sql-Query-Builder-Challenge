@@ -7,9 +7,9 @@ public record SqlWhere(SqlColumn Column, Operator Operator, object Value) : IWhe
         var val = Value.ToString();
         // We would worry about SQL injection here if SQL query is executed
         if (Value is string)
-            val = $"\"{Value}\"";
+            val = $"'{Value}'";
         else if (Value is DateTime dt) 
-            val = $"'{dt:yyyy-MM-dd HH:mm:ss.mmm}'";
+            val = $"'{dt:yyyy-MM-dd HH:mm:ss.fff}'";
         return $"{Column.TableName}.{Column.ColumnName} {Operator.ToSqlString()} {val}";
     }
 }
