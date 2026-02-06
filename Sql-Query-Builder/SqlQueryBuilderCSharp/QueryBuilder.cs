@@ -7,7 +7,8 @@ public class QueryBuilder
     private readonly StringBuilder _stringBuilder = new();
     private string _tableName = string.Empty;
     private SqlColumn[] _selectedColumns = [];
-    private List<SqlJoins> _joins = [];
+    private readonly List<SqlJoin> _joins = [];
+    private IWhere? _where = null;
     
     public QueryBuilder From(string tableName)
     {
@@ -23,8 +24,23 @@ public class QueryBuilder
 
     public QueryBuilder Join(string table, SqlColumn left, SqlColumn right, JointType jointType)
     {
-        _joins.Add(new SqlJoins(table, left, right, jointType));
+        _joins.Add(new SqlJoin(table, left, right, jointType));
         return this;
+    }
+
+    public QueryBuilder Where(IWhere where)
+    {
+        _where = where;
+        return this;
+    }
+
+    public void Clear()
+    {
+        _stringBuilder.Clear();
+        _tableName = string.Empty;
+        _selectedColumns = [];
+        _joins.Clear();
+        _where = null;
     }
     
     public string Build()
@@ -45,52 +61,17 @@ public class QueryBuilder
 
         if (_joins.Count > 0)
         {
-            _stringBuilder.Append(" ");
+            _stringBuilder.Append(' ');
             _stringBuilder.Append(string.Join(" ", _joins.Select(c => c.ToString())));
+        }
+
+        if (_where != null)
+        {
+            _stringBuilder.Append(" WHERE ");
+            _stringBuilder.Append(_where.ToString());
         }
         
         return _stringBuilder.ToString();
     }
 }
 
-public record SqlColumn(string TableName, string ColumnName, string? ColumnAlias = null)
-{
-    public override string ToString()
-    {
-        if (string.IsNullOrEmpty(ColumnAlias))
-            return $"{TableName}.{ColumnName}";
-        else
-            return $"{TableName}.{ColumnName} AS {ColumnAlias}";
-    }
-}
-
-public record SqlJoins(string table, SqlColumn left, SqlColumn right, JointType JointType)
-{
-    public override string ToString()
-    {
-        return $"{JointType.ToSqlString()} JOIN {table} ON {left.TableName}.{left.ColumnName} = {right.TableName}.{right.ColumnName}";
-    }
-}
-
-public enum JointType
-{
-    Inner,
-    LeftOuter,
-    RightOuter
-}
-
-public static class JoinTypeConversion
-{
-    public static string ToSqlString(this JointType jointType)
-    {
-        switch (jointType)
-        {
-            case JointType.Inner:
-                return "INNER";
-            case JointType.LeftOuter:
-                return "LEFT OUTER";
-            case JointType.RightOuter:
-                return "RIGHT OUTER";
-        }
-    }
-}

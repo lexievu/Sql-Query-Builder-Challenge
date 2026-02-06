@@ -42,7 +42,7 @@ public class QueryBuilderTests
         var queryBuilder = new QueryBuilder()
             .From("Event")
             .Select([new SqlColumn("Event", "Id", "I"), new SqlColumn("Event", "Name", "N")])
-            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), "INNER")
+            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
             .Build();
         
         var expected = "SELECT Event.Id AS I, Event.Name AS N FROM Event INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId";
@@ -60,8 +60,37 @@ public class QueryBuilderTests
             .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter)
             .Build();
         
-        var expected = "SELECT Event.Id AS I, Event.Name AS N FROM Event INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId" +
-                       " LEFT OUTER JOIN Attendee ON EventAttendee.AttendeeId = Attendee.Id";
+        var expected = "SELECT Event.Id AS I, Event.Name AS N " +
+                       "FROM Event " +
+                       "INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId " +
+                       "LEFT OUTER JOIN Attendee ON EventAttendee.AttendeeId = Attendee.Id";
+        
+        Assert.Equal(expected, queryBuilder);
+    }
+
+    [Fact]
+    public void QueryBuilderClear()
+    {
+        var queryBuilder = new QueryBuilder()
+            .From("Event")
+            .Select([new SqlColumn("Event", "Id", "I"), new SqlColumn("Event", "Name", "N")])
+            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
+            .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter);
+        queryBuilder.Clear();
+        
+        Assert.Equal(string.Empty, queryBuilder.Build());
+    }
+    
+    [Fact]
+    public void SimpleWhere()
+    {
+        var queryBuilder = new QueryBuilder()
+            .From("Event")
+            .Select([new SqlColumn("Event", "Id"), new SqlColumn("Event", "Name")])
+            .Where(new SqlWhere(new SqlColumn("Event", "Id"), Operator.Equals, 2))
+            .Build();
+        
+        var expected = "SELECT Event.Id, Event.Name FROM Event WHERE Event.Id = 2";
         
         Assert.Equal(expected, queryBuilder);
     }
@@ -69,20 +98,21 @@ public class QueryBuilderTests
     [Fact]
     public void Ultimate()
     {
-        // var query = new QueryBuilder()
-        //     .From("Events")
-        //     .Join(JoinType.Inner, "Events.Id", "EventAttendee.EventId")
-        //     .Join(JoinType.Inner, "EventAttendee.AttendeeId", "Attendee.Id")
-        //     .Where("Attendee.Name = \"Bob\" or Events.Important = 1")
-        //     .Select("Events.Name", "Attendee.Name")
-        //     .Build();
-        //
-        // var expected = "SELECT Events.Name, Attendee.Name" +
-        //                "FROM Events" +
-        //                "INNER JOIN EventAttendee ON Events.Id = EventAttendee.EventId" +
-        //                "INNER JOIN Attendee ON Attendee.Id = EventAttendee.AttendeeId" +
-        //                "WHERE Attendee.Name = \"Bob\" OR Events.Important = 1;";
-        //
-        // Assert.Equal(expected, query);
+        var query = new QueryBuilder()
+            .From("Event")
+            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
+            .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter)
+            .Select([new SqlColumn("Event", "Name", "I"), new SqlColumn("Attendee", "Name", "N")])
+            .Where(new Or([new SqlWhere(new SqlColumn("Attendee", "Name"), Operator.Equals, "Bob"),
+                new SqlWhere(new SqlColumn("Event", "Important"), Operator.GreaterThanOrEquals, 1)]))
+            .Build();
+        
+        var expected = "SELECT Event.Name AS I, Attendee.Name AS N " +
+                       "FROM Event " +
+                       "INNER JOIN EventAttendee ON Event.Id = EventAttendee.EventId " +
+                       "LEFT OUTER JOIN Attendee ON EventAttendee.AttendeeId = Attendee.Id " +
+                       "WHERE (Attendee.Name = \"Bob\" OR Event.Important >= 1)";
+        
+        Assert.Equal(expected, query);
     }
 }
