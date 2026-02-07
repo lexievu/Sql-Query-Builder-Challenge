@@ -1,4 +1,4 @@
-namespace SqlQueryBuilderCSharp;
+namespace SqlQueryBuilder;
 
 public record SqlJoin(string Table, SqlColumn Left, SqlColumn Right, JointType JointType)
 {

@@ -1,4 +1,4 @@
-namespace SqlQueryBuilderCSharp;
+namespace SqlQueryBuilder;
 
 public enum JointType
 {

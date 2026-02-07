@@ -1,4 +1,4 @@
-﻿using SqlQueryBuilderCSharp;
+﻿using SqlQueryBuilder;
 
 namespace SqlQueryBuilderTests;
 

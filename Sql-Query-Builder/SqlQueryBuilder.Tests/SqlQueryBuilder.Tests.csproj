@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <RootNamespace>SqlQueryBuilderTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SqlQueryBuilderCSharp\SqlQueryBuilderCSharp.csproj" />
+      <ProjectReference Include="..\SqlQueryBuilder\SqlQueryBuilder.csproj" />
     </ItemGroup>
 
 </Project>

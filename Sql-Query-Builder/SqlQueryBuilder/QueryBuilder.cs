@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace SqlQueryBuilderCSharp;
+namespace SqlQueryBuilder;
 
 public class QueryBuilder
 {

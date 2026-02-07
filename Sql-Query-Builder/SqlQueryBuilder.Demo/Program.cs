@@ -1,4 +1,4 @@
-﻿using SqlQueryBuilderCSharp;
+﻿using SqlQueryBuilder;
 
 var query = new QueryBuilder()
     .From("Event")

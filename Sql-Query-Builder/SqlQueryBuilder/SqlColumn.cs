@@ -1,4 +1,4 @@
-namespace SqlQueryBuilderCSharp;
+namespace SqlQueryBuilder;
 
 public record SqlColumn(string TableName, string ColumnName, string? ColumnAlias = null)
 {

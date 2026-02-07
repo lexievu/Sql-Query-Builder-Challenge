@@ -1,4 +1,4 @@
-namespace SqlQueryBuilderCSharp;
+namespace SqlQueryBuilder;
 
 public record SqlWhere(SqlColumn Column, Operator Operator, object Value) : IWhere
 {
