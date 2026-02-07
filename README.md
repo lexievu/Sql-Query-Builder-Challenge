@@ -1,21 +1,25 @@
 # SQL Query Builder Challenge
 
-## Project Structure
-* `SqlQueryBuilderCSharp`: Main library + Console "Demo" application.
-* `SqlQueryBuilderTests`: xUnit test suite.
+### Project Structure
+* `SqlQueryBuilder`: Core class library.
+* `SqlQueryBuilder.Demo`: Console application demonstrating a complex query scenario.
+* `SqlQueryBuilder.Tests`: xUnit test suite covering all clause combinations.
 
 ## How to Run
-1. Open the solution in VS 2026.
-2. Run `SqlQueryBuilderCSharp` (Console App).
-3. It will print the SQL output for a complex query scenario required in the spec.
+1. Open the solution in **Visual Studio 2026**.
+2. Set `SqlQueryBuilder.Demo` as the Startup Project.
+3. Run the application (F5).
+4. It will print the generated SQL for the complex query scenario required in the spec.
 
 ## Implementation Notes
 * **Type Safety:** I used C# Records (`SqlColumn`) and Enums (`JointType`, `Operator`) to avoid magic strings.
 * **Recursive Where:** The `IWhere` interface allows nesting `AND`/`OR` clauses infinitely (e.g. `(A OR B) AND C`).
 * **Formatting:** DateTimes are formatted to SQL-safe strings (`yyyy-MM-dd...`), and strings are wrapped in single quotes.
 
-## Limitations / Future Improvements
-* **SQL Injection:** Currently, values are sanitised directly into the string.
+## Limitations
+Due to the time constraints (1-2 hours), the following features were explicitly treated as **Out of Scope**:
+
+** **SQL Injection:** Currently, values are sanitised directly into the string.
 * **Operators:** The current implementation supports standard comparison operators (`=`, `!=`, `<`, `>`, etc.). Advanced operators like `IN`, `BETWEEN`, `LIKE`, and `IS NULL` are not yet supported.
 * **Aggregates:** Functions like `COUNT`, `MAX`, or `SUM` are not currently supported in the `SqlColumn` object structure.
 * **Complex Selections:** Subqueries and CTEs are out of scope for this lightweight implementation but could be added by allowing `From()` to accept a `QueryBuilder` instance.
