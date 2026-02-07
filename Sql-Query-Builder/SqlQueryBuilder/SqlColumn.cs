@@ -7,6 +7,6 @@ public record SqlColumn(string TableName, string ColumnName, string? ColumnAlias
         if (string.IsNullOrEmpty(ColumnAlias))
             return $"{TableName}.{ColumnName}";
         else
-            return $"{TableName}.{ColumnName} AS {ColumnAlias}";
+            return $"{TableName}.{ColumnName} AS \"{ColumnAlias}\"";
     }
 }
