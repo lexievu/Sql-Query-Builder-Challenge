@@ -2,6 +2,7 @@ using System.Text;
 
 namespace SqlQueryBuilder;
 
+/// <inheritdoc/>
 public class QueryBuilder : IQueryBuilder
 {
     private readonly StringBuilder _stringBuilder = new();
@@ -12,7 +13,11 @@ public class QueryBuilder : IQueryBuilder
     
     // LIGHTWEIGHT LOGGING: Inject a simple action instead of a heavy ILogger
     private readonly Action<string>? _logger;
-
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QueryBuilder"/> class.
+    /// </summary>
+    /// <param name="logger">Optional action to log the generated SQL (e.g. Console.WriteLine).</param>
     public QueryBuilder(Action<string>? logger = null)
     {
         _logger = logger;
@@ -42,15 +47,6 @@ public class QueryBuilder : IQueryBuilder
         return this;
     }
 
-    public void Clear()
-    {
-        _stringBuilder.Clear();
-        _tableName = string.Empty;
-        _selectedColumns = [];
-        _joins.Clear();
-        _where = null;
-    }
-    
     public string Build()
     {
         if (string.IsNullOrEmpty(_tableName))

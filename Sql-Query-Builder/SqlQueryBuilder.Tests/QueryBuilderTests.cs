@@ -94,20 +94,6 @@ public class QueryBuilderTests
     }
 
     [Fact]
-    public void QueryBuilderClear()
-    {
-        var queryBuilder = new QueryBuilder()
-            .From("Event")
-            .Select([new SqlColumn("Event", "Id", "I"), new SqlColumn("Event", "Name", "N")])
-            .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
-            .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter);
-        queryBuilder.Clear();
-        
-        // Query builder now empty, so will throw an exception
-        Assert.Throws<InvalidOperationException>(() => new QueryBuilder().Build());
-    }
-    
-    [Fact]
     public void SimpleWhere()
     {
         var queryBuilder = new QueryBuilder()
