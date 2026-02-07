@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SqlQueryBuilder;
 
-public class QueryBuilder
+public class QueryBuilder : IQueryBuilder
 {
     private readonly StringBuilder _stringBuilder = new();
     private string _tableName = string.Empty;
@@ -10,25 +10,33 @@ public class QueryBuilder
     private readonly List<SqlJoin> _joins = [];
     private IWhere? _where = null;
     
-    public QueryBuilder From(string tableName)
+    // LIGHTWEIGHT LOGGING: Inject a simple action instead of a heavy ILogger
+    private readonly Action<string>? _logger;
+
+    public QueryBuilder(Action<string>? logger = null)
+    {
+        _logger = logger;
+    }
+    
+    public IQueryBuilder From(string tableName)
     {
         _tableName = tableName;
         return this;
     }
 
-    public QueryBuilder Select(SqlColumn[] columns)
+    public IQueryBuilder Select(SqlColumn[] columns)
     {
         _selectedColumns = columns;
         return this;
     }
 
-    public QueryBuilder Join(string table, SqlColumn left, SqlColumn right, JointType jointType)
+    public IQueryBuilder Join(string table, SqlColumn left, SqlColumn right, JointType jointType)
     {
         _joins.Add(new SqlJoin(table, left, right, jointType));
         return this;
     }
 
-    public QueryBuilder Where(IWhere where)
+    public IQueryBuilder Where(IWhere where)
     {
         _where = where;
         return this;
@@ -45,6 +53,16 @@ public class QueryBuilder
     
     public string Build()
     {
+        if (string.IsNullOrEmpty(_tableName))
+        {
+            throw new InvalidOperationException("Query must have a FROM clause defined.");
+        }
+
+        if (_selectedColumns.Length == 0)
+        {
+            throw new InvalidOperationException("Query must select at least one column.");
+        }
+
         _stringBuilder.Clear();
 
         if (_selectedColumns.Length > 0)
@@ -71,7 +89,9 @@ public class QueryBuilder
             _stringBuilder.Append(_where.ToString());
         }
         
-        return _stringBuilder.ToString();
+        var sql = _stringBuilder.ToString();
+        _logger?.Invoke($"[{nameof(QueryBuilder)}.{nameof(Build)}] Generated SQL: {sql}");
+        return sql;
     }
 }
 

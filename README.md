@@ -16,6 +16,11 @@
 
 ## Limitations / Future Improvements
 * **SQL Injection:** Currently, values are sanitised directly into the string.
+* **Aggregates:** Functions like `COUNT`, `MAX`, or `SUM` are not currently supported in the `SqlColumn` object structure.
+* **Complex Selections:** Subqueries and CTEs are out of scope for this lightweight implementation but could be added by allowing `From()` to accept a `QueryBuilder` instance.
+* **Joint Type:** `CROSS JOIN` is intentionally omitted as it requires a different data structure (no `ON` clause).
+* **Architecture:** Currently uses a Builder pattern where the `QueryBuilder` orchestrates the SQL order. For a more extensible design (e.g. supporting CTEs or Union clauses), this could be refactored into an Interpreter pattern where each clause is an independent `IQueryPart`.
+
 ## Example Usage
 ```csharp
 var query = new QueryBuilder()

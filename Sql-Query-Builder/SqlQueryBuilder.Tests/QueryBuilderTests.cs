@@ -5,9 +5,21 @@ namespace SqlQueryBuilderTests;
 public class QueryBuilderTests
 {
     [Fact]
-    public void Builder()
+    public void BuilderEmpty_ThrowException()
     {
-        Assert.Equal(string.Empty, new QueryBuilder().Build());
+        Assert.Throws<InvalidOperationException>(() => new QueryBuilder().Build());
+    }
+
+    [Fact]
+    public void NoSelect_ThrowException()
+    {
+        Assert.Throws<InvalidOperationException>(() => new QueryBuilder().From("Event").Build());
+    }
+
+    [Fact]
+    public void NoFrom_ThrowException()
+    {
+        Assert.Throws<InvalidOperationException>(() => new QueryBuilder().Select([new SqlColumn("Event", "Name")]).Build());
     }
 
     [Fact]
@@ -91,7 +103,8 @@ public class QueryBuilderTests
             .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter);
         queryBuilder.Clear();
         
-        Assert.Equal(string.Empty, queryBuilder.Build());
+        // Query builder now empty, so will throw an exception
+        Assert.Throws<InvalidOperationException>(() => new QueryBuilder().Build());
     }
     
     [Fact]

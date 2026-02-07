@@ -1,6 +1,6 @@
 ﻿using SqlQueryBuilder;
 
-var query = new QueryBuilder()
+var query = new QueryBuilder(logMessage => Console.WriteLine($"DEBUG: {logMessage}"))
     .From("Event")
     .Join("EventAttendee", new SqlColumn("Event", "Id"), new SqlColumn("EventAttendee", "EventId"), JointType.Inner)
     .Join("Attendee", new SqlColumn("EventAttendee", "AttendeeId"), new SqlColumn("Attendee", "Id"), JointType.LeftOuter)

@@ -4,7 +4,8 @@ public enum JointType
 {
     Inner,
     LeftOuter,
-    RightOuter
+    RightOuter,
+    FullOuter
 }
 
 public static class JointTypeConversion
@@ -19,6 +20,8 @@ public static class JointTypeConversion
                 return "LEFT OUTER";
             case JointType.RightOuter:
                 return "RIGHT OUTER";
+            case JointType.FullOuter:
+                return "FULL OUTER";
             default:
                 throw new ArgumentException(nameof(JointType));
         }
