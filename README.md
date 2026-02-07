@@ -19,7 +19,7 @@
 ## Limitations
 Due to the time constraints (1-2 hours), the following features were explicitly treated as **Out of Scope**:
 
-** **SQL Injection:** Currently, values are sanitised directly into the string.
+* **SQL Injection:** Currently, values are sanitised directly into the string.
 * **Operators:** The current implementation supports standard comparison operators (`=`, `!=`, `<`, `>`, etc.). Advanced operators like `IN`, `BETWEEN`, `LIKE`, and `IS NULL` are not yet supported.
 * **Aggregates:** Functions like `COUNT`, `MAX`, or `SUM` are not currently supported in the `SqlColumn` object structure.
 * **Complex Selections:** Subqueries and CTEs are out of scope for this lightweight implementation but could be added by allowing `From()` to accept a `QueryBuilder` instance.

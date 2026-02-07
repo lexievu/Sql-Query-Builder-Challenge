@@ -28,7 +28,7 @@ internal static class SqlValueFormatter
             string str => $"'{str}'",
             DateTime dt => $"'{dt.ToString(SqlConfiguration.DateTimeFormat)}'",
             bool b => b ? "1" : "0",
-            _ => value.ToString() ?? "NULL"
+            _ => value?.ToString() ?? "NULL"
         };
     }
 }
