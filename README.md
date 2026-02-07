@@ -1,5 +1,7 @@
 # SQL Query Builder Challenge
 
+[![CI Tests](https://github.com/lexievu/Sql-Query-Builder-Challenge/actions/workflows/main.yml/badge.svg)](https://github.com/lexievu/Sql-Query-Builder-Challenge/actions/workflows/main.yml)
+
 ### Project Structure
 * `SqlQueryBuilder`: Core class library.
 * `SqlQueryBuilder.Demo`: Console application demonstrating a complex query scenario.
